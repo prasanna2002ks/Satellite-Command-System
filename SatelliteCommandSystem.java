@@ -7,41 +7,57 @@ class Satellite {
     int dataCollected = 0;
 
     // Logger for logging events
-	Logger LOGGER = Logger.getLogger(Satellite.class.getName());
+    Logger LOGGER = Logger.getLogger(Satellite.class.getName());
 
     void rotate(String direction) {
-        if (direction.equals("North") || direction.equals("South") || direction.equals("East") || direction.equals("West")) {
-            orientation = direction;
-            LOGGER.log(Level.INFO, "Satellite orientation set to " + direction);
-        } else {
-            LOGGER.log(Level.WARNING, "Invalid direction. Use North, South, East, or West.");
+        try {
+            if (direction.equals("North") || direction.equals("South") || direction.equals("East") || direction.equals("West")) {
+                orientation = direction;
+                LOGGER.log(Level.INFO, "Satellite orientation set to " + direction);
+            } else {
+                throw new IllegalArgumentException("Invalid direction. Use North, South, East, or West.");
+            }
+        } catch (IllegalArgumentException e) {
+            LOGGER.log(Level.WARNING, e.getMessage());
         }
     }
 
     void activatePanels() {
-        if (solarPanels.equals("Inactive")) {
-            solarPanels = "Active";
-            LOGGER.log(Level.INFO, "Solar panels activated.");
-        } else {
-            LOGGER.log(Level.WARNING, "Solar panels are already active.");
+        try {
+            if (solarPanels.equals("Inactive")) {
+                solarPanels = "Active";
+                LOGGER.log(Level.INFO, "Solar panels activated.");
+            } else {
+                throw new IllegalStateException("Solar panels are already active.");
+            }
+        } catch (IllegalStateException e) {
+            LOGGER.log(Level.WARNING, e.getMessage());
         }
     }
 
     void deactivatePanels() {
-        if (solarPanels.equals("Active")) {
-            solarPanels = "Inactive";
-            LOGGER.log(Level.INFO, "Solar panels deactivated.");
-        } else {
-            LOGGER.log(Level.WARNING, "Solar panels are already inactive.");
+        try {
+            if (solarPanels.equals("Active")) {
+                solarPanels = "Inactive";
+                LOGGER.log(Level.INFO, "Solar panels deactivated.");
+            } else {
+                throw new IllegalStateException("Solar panels are already inactive.");
+            }
+        } catch (IllegalStateException e) {
+            LOGGER.log(Level.WARNING, e.getMessage());
         }
     }
 
     void collectData() {
-        if (solarPanels.equals("Active")) {
-            dataCollected += 10;
-            LOGGER.log(Level.INFO, "Data collected: " + dataCollected);
-        } else {
-            LOGGER.log(Level.WARNING, "Cannot collect data. Solar panels are inactive.");
+        try {
+            if (solarPanels.equals("Active")) {
+                dataCollected += 10;
+                LOGGER.log(Level.INFO, "Data collected: " + dataCollected);
+            } else {
+                throw new IllegalStateException("Cannot collect data. Solar panels are inactive.");
+            }
+        } catch (IllegalStateException e) {
+            LOGGER.log(Level.WARNING, e.getMessage());
         }
     }
 }
@@ -49,9 +65,13 @@ class Satellite {
 class SatelliteCommandSystem {
     public static void main(String[] args) {
         Satellite satellite = new Satellite();
-		
-        satellite.rotate("South");
-        satellite.activatePanels();
-        satellite.collectData();
+        try {
+            satellite.rotate("South");
+            satellite.activatePanels();
+            satellite.collectData();
+            satellite.activatePanels(); // Try activating panels again (should trigger an exception)
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
