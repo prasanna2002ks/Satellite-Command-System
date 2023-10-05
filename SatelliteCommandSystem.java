@@ -62,24 +62,6 @@ class CollectDataCommand implements Command {
     }
 }
 
-/*class ToggleSatellite implements Command {
-	private Satellite satellite;
-	
-	public ToggleSatellite(Satellite satellite){
-		this.satellite = satellite;
-	}
-	
-	@Override
-	public void execute() {
-		if(satellite.solarPanels.equals("Active")){
-			satellite.deactivatePanels();
-		} else {
-			satellite.activatePanels();
-		}
-	}
-	
-}*/
-
 class Satellite {
     String orientation = "North";
     String solarPanels = "Inactive";
