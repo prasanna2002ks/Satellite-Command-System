@@ -7,7 +7,7 @@ interface Command {
     void execute();
 }
 
-// Concrete command classes
+// Child command classes
 class RotateCommand implements Command {
     private Satellite satellite;
     private String direction;
@@ -115,11 +115,15 @@ class Satellite {
 
     void collectData() {
         try {
-            if (solarPanels.equals("Active")) {
+			if(solarPanels.equals("Active") && orientation.equalsIgnoreCase("North")) {
+				dataCollected += 20;
+                System.out.println("\n");
+                LOGGER.info("\nData collected : 20");
+			} else if (solarPanels.equals("Active")) {
                 dataCollected += 10;
                 System.out.println("\n");
                 LOGGER.info("\nData collected : 10");
-            } else {
+            } else{
                 throw new IllegalStateException("!!!Cannot collect data. Solar panels are inactive.!!!");
             }
         } catch (IllegalStateException e) {
