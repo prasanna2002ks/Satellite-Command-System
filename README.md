@@ -93,7 +93,7 @@ The createCommand method takes the user input and returns an appropriate command
 This method is responsible for printing the current state of the satellite, including its orientation, solar panel status, and data collected. It helps in displaying the satellite's state to the user.
 
 
-Command Design Pattern:
+**Command Design Pattern:**
           * The Command Pattern encapsulates a request as an object, thereby allowing for parameterization of clients with queues, requests, and operations.
 In this case, we can create command objects for different satellite operations: RotateCommand, ActivatePanelsCommand, DeactivatePanelsCommand, and CollectDataCommand.
           * This pattern decouples the sender (user) from the receiver (Satellite) and allows you to extend the operations easily.
