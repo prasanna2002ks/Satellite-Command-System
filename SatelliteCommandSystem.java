@@ -62,6 +62,24 @@ class CollectDataCommand implements Command {
     }
 }
 
+/*class ToggleSatellite implements Command {
+	private Satellite satellite;
+	
+	public ToggleSatellite(Satellite satellite){
+		this.satellite = satellite;
+	}
+	
+	@Override
+	public void execute() {
+		if(satellite.solarPanels.equals("Active")){
+			satellite.deactivatePanels();
+		} else {
+			satellite.activatePanels();
+		}
+	}
+	
+}*/
+
 class Satellite {
     String orientation = "North";
     String solarPanels = "Inactive";
@@ -132,7 +150,7 @@ class Satellite {
     }
 }
 
-class SatelliteCommandSystem {
+class SatelliteCommandSystem2 {
     public static void main(String[] args) {
         Satellite satellite = new Satellite();
         Scanner scanner = new Scanner(System.in);
@@ -142,7 +160,7 @@ class SatelliteCommandSystem {
         printSatelliteState(satellite);
 
         while (true) {
-            System.out.println("\nEnter a command (rotate, activatePanels, deactivatePanels, collectData, exit):");
+            System.out.println("\nEnter a command (rotate, activatePanels, deactivatePanels, collectData, Status, Toggle ,reset, exit):");
             String input = scanner.nextLine();
 
             if (input.equalsIgnoreCase("exit")) {
@@ -151,7 +169,9 @@ class SatelliteCommandSystem {
 
             try {
                 Command command = createCommand(satellite, input);
-                command.execute();
+				if(command!=null){
+					command.execute();
+				}
             } catch (IllegalArgumentException e) {
                 System.out.println("!!!Invalid command. Please enter a valid command.!!!");
             }
@@ -159,6 +179,20 @@ class SatelliteCommandSystem {
             printSatelliteState(satellite);
         }
     }
+	
+	public static void ToggleSatellite(Satellite satellite) {
+		if(satellite.solarPanels.equals("Active")){
+			satellite.deactivatePanels();
+		} else {
+			satellite.activatePanels();
+		}
+	}
+	
+	public static void reset(Satellite satellite){
+		satellite.orientation = "North";
+		satellite.solarPanels = "Inactive";
+		satellite.dataCollected = 0;
+	}
 
     private static Command createCommand(Satellite satellite, String command) {
         Scanner scanner = new Scanner(System.in);
@@ -173,6 +207,16 @@ class SatelliteCommandSystem {
                 return new DeactivatePanelsCommand(satellite);
             case "collectdata":
                 return new CollectDataCommand(satellite);
+			case "status":
+				printSatelliteState(satellite);
+				return null;
+			case "toggle":
+				ToggleSatellite(satellite);
+				return null;
+			case "reset":
+				reset(satellite);
+				printSatelliteState(satellite);
+				return null;
             default:
                 throw new IllegalArgumentException("!!!Invalid command.!!!");
         }
